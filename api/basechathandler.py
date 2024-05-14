@@ -7,7 +7,7 @@ from .messagehandler import MessageHandler
 from .promptbuilder import PromptBuilder
 
 class BaseChatHandler:
-    def __init__(self, api_key, ai_name, template, model=None, max_tokens=512, temperature=1.0, top_p=1.0, **kwargs):
+    def __init__(self, api_key, ai_name, template, model=None, max_tokens=512, temperature=1.0, top_p=1.0, memory_max_tokens=16384, memory_model=None, **kwargs):
         self.api_key = api_key
         self.ai_name = ai_name
         self.model = model
@@ -19,7 +19,15 @@ class BaseChatHandler:
         self.messages = MessageHandler()
         self.prompt_builder = PromptBuilder(ai_name, template, self.messages)
         self.client = self.initialize_client()
-        self.memory_client = self.client
+        self.memory_config = {
+            'ai_name': self.ai_name,
+            'llm': self.client,
+            'model': memory_model or model,
+            'temperature': 0.4,
+            'top_p': 0.9,
+            'max_tokens': memory_max_tokens
+        }
+    
         self.load_user_threads()
 
     def initialize_client(self):
@@ -36,10 +44,8 @@ class BaseChatHandler:
         try:
             with open(f'./logs/{self.ai_name}/user_threads.pkl', 'rb') as file:
                 loaded_user_threads = pickle.load(file)
-            for user_id, state in loaded_user_threads.items():
-                memory = Memory(ai_name=self.ai_name)
-                memory.__setstate__(state, llm=self.memory_client)
-                self.user_threads[user_id] = memory
+            for user_id, memory in loaded_user_threads.items():
+                memory.reinit(**self.memory_config)
         except FileNotFoundError:
             self.user_threads = {}
         except Exception as e:
@@ -53,7 +59,10 @@ class BaseChatHandler:
         self.user_threads[user_id] = memory
 
     def get_user_thread(self, user_id):
-        return self.user_threads.get(user_id, Memory(self.ai_name, self.memory_client))
+        return self.user_threads.get(
+            user_id,
+            Memory(**self.memory_config)
+        )
 
     async def reset_thread(self, user_id):
         if user_id in self.user_threads:
@@ -63,11 +72,11 @@ class BaseChatHandler:
     async def get_ai_response(self, user_input, user):
         if not self.model:
             raise ValueError("Model is not set.")
+        
         self.log.debug(user)
         (user_id, user_name), = user.items()
         user_input = self.messages.create_message(user_input, role="user")
         prompt = self.prompt_builder.build_prompt(user, user_input, self.get_user_thread(user_id))
-        
         try:
             response = await asyncio.get_running_loop().run_in_executor(
                 None,
@@ -83,7 +92,6 @@ class BaseChatHandler:
         except Exception as e:
             self.log.error(f"Error getting response: {e}")
             return "An error occurred."
-        
         response = response.choices[0].message
         response = self.messages.create_message(response.content, response.role)
         user_input.extend(response)
