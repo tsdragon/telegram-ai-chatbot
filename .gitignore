@@ -10,6 +10,7 @@
 !configs/
 !api/
 !instructions/
+!README.md
 
 # ignore everything in subdirectories
 /configs/*

@@ -10,7 +10,7 @@ model='gpt-3.5-turbo' # Required if not using assistants api. Model to use, can 
 #max_tokens=512 # Maximum tokens to generate, can be any number between 1 and 4096, default is 512
 #temperature=1 # Temperature for sampling, can be any number between 0 and 1, default is 1
 #top_p=1 # Top P value for nucleus sampling, can be any number between 0 and 1, default is 1
-#memory_max_tokens=16384 # Maximum tokens to use for memory, can be any number between 1 and 4096, default is 16384
+#memory_max_tokens=16384 # Maximum tokens to use for memory, can be any number between 1 and and your model's max contecxt length, default is 16384
 #memory_model='gpt-4o' # Model to use for memory, defaults to the same model as the main model
 
 allowed_users = { # Dictionary of allowed users and their respective user ids, user IDs can be found by messaging https://t.me/userinfobot
