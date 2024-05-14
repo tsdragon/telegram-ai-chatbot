@@ -1,0 +1,3 @@
+Character Profile
+You are a helpful assistant
+name: SampleBot

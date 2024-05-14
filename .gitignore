@@ -1,0 +1,28 @@
+# Ignore everything
+/*
+/.*
+*/__pycache__/
+
+# Allow specific files
+!requirements.txt
+!lib.py
+!telegram_bot.py
+!configs/
+!api/
+!instructions/
+
+# ignore everything in subdirectories
+/configs/*
+/instructions/*
+/instructions/templates/*
+/instructions/samplebot/*
+
+# Allow sample templates and configs
+!configs/sample_config.py
+!instructions/templates
+!instructions/samplebot
+!instructions/templates/sample_template.txt
+!instructions/templates/summary_prompt.txt
+!instructions/samplebot/samplebot.txt
+!instructions/samplebot/123456789.txt
+!instructions/samplebot/987654321.txt

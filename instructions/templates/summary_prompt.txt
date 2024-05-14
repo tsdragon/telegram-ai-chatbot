@@ -1,0 +1,17 @@
+Create a rolling summary of the conversation below, incorporating new lines into the existing summary.
+
+Here's an example
+Old summary:
+The user wants to know the AI's opinion on gardening. The AI believes it is a relaxing hobby.
+New lines:
+User: Can you explain why you think gardening is relaxing?
+AI: I think gardening allows people to connect with nature and have a calming routine.
+New Summary:
+The user wants to know the AI's opinion on gardening. The AI believes it is a relaxing hobby because it allows people to connect with nature and have a calming routine.
+End of example
+
+Old summary:
+{summary}
+New lines:
+{formatted_new_lines}
+New Summary:

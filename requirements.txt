@@ -1,0 +1,12 @@
+tiktoken
+openai
+Pyrogram
+langchain-groq
+langchain
+TgCrypto
+transformers
+torch
+aiofiles
+asyncio
+importlib
+groq
