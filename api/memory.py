@@ -77,8 +77,11 @@ class Memory:
             line['role'] = user_name if line['role'] == 'user' else self.ai_name
             formatted_new_lines += f"{line['role']}: {line['content']}\n"
         
+        self.log.debug(f"Loading summary prompt template.")
         prompt_template = load_template("summary_prompt")
-        prompt = prompt_template.format(summary=self.summary, formatted_new_lines=formatted_new_lines)
+        self.log.debug(f"formatting summary prompt.")
+        prompt = prompt_template.format(summary=self.summary, formatted_new_lines=formatted_new_lines, user_name=user_name, ai_name=self.ai_name)
+        self.log.debug(f"Formatted summary prompt: {prompt}")
         prompt_message = self.messages.create_message(prompt, role="system")
         self.log.debug(f"Constructed summary prompt: {prompt_message}")
         return prompt_message

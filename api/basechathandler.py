@@ -46,6 +46,7 @@ class BaseChatHandler:
                 loaded_user_threads = pickle.load(file)
             for user_id, memory in loaded_user_threads.items():
                 memory.reinit(**self.memory_config)
+            self.user_threads = loaded_user_threads
         except FileNotFoundError:
             self.user_threads = {}
         except Exception as e:
