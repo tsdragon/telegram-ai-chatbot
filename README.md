@@ -21,7 +21,7 @@ A Python-based Telegram chatbot integrated with multiple AI services including O
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/yourusername/telegram-ai-chatbot.git
+    git clone https://github.com/tsdragon/telegram-ai-chatbot.git
     cd telegram-ai-chatbot
     ```
 
