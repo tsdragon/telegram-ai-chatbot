@@ -7,7 +7,7 @@ from .messagehandler import MessageHandler
 from .promptbuilder import PromptBuilder
 
 class BaseChatHandler:
-    def __init__(self, api_key, ai_name, template, model=None, max_tokens=512, temperature=1.0, top_p=1.0, memory_max_tokens=16384, memory_model=None, **kwargs):
+    def __init__(self, api_key, ai_name, template, summary_prompt="summary_prompt", model=None, max_tokens=512, temperature=1.0, top_p=1.0, memory_max_tokens=16384, memory_model=None, **kwargs):
         self.api_key = api_key
         self.ai_name = ai_name
         self.model = model
@@ -21,6 +21,7 @@ class BaseChatHandler:
         self.client = self.initialize_client()
         self.memory_config = {
             'ai_name': self.ai_name,
+            'summary_prompt': summary_prompt,
             'llm': self.client,
             'model': memory_model or model,
             'temperature': 0.4,

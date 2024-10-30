@@ -11,17 +11,18 @@ DEFAULT_TOP_P = 0.9
 DEFAULT_MAX_TOKENS = 16384
 
 class Memory:
-    def __init__(self, ai_name, llm=None, model=DEFAULT_MODEL, temperature=DEFAULT_TEMPERATURE, top_p=DEFAULT_TOP_P, max_tokens=DEFAULT_MAX_TOKENS):
-        self._initialize(ai_name, llm, model, temperature, top_p, max_tokens)
+    def __init__(self, ai_name, summary_prompt="summary_prompt", llm=None, model=DEFAULT_MODEL, temperature=DEFAULT_TEMPERATURE, top_p=DEFAULT_TOP_P, max_tokens=DEFAULT_MAX_TOKENS):
+        self._initialize(ai_name, summary_prompt, llm, model, temperature, top_p, max_tokens)
         self.message_history = []
         self.summary = None
 
     def reinit(self, ai_name, llm, model=DEFAULT_MODEL, temperature=DEFAULT_TEMPERATURE, top_p=DEFAULT_TOP_P, max_tokens=DEFAULT_MAX_TOKENS):
         self._initialize(ai_name, llm, model, temperature, top_p, max_tokens)
 
-    def _initialize(self, ai_name, llm, model, temperature, top_p, max_tokens):
+    def _initialize(self, ai_name, summary_prompt, llm, model, temperature, top_p, max_tokens):
         self.log = logging.getLogger(__name__)
         self.ai_name = ai_name
+        self.summary_prompt = summary_prompt
         self.client = llm
         self.default_params = {
             'model': model,
@@ -78,7 +79,7 @@ class Memory:
             formatted_new_lines += f"{line['role']}: {line['content']}\n"
         
         self.log.debug(f"Loading summary prompt template.")
-        prompt_template = load_template("summary_prompt")
+        prompt_template = load_template(self.summary_prompt)
         self.log.debug(f"formatting summary prompt.")
         prompt = prompt_template.format(summary=self.summary, formatted_new_lines=formatted_new_lines, user_name=user_name, ai_name=self.ai_name)
         self.log.debug(f"Formatted summary prompt: {prompt}")
